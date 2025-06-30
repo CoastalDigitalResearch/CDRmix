@@ -1,9 +1,11 @@
-import os
-import json
-import random
 import argparse
+import json
+import os
+import random
 from pathlib import Path
+
 from tqdm import tqdm
+
 
 def slice_jsonl(input_path, output_dir, sample_size=5000, seed=42):
     output_dir = Path(output_dir)
