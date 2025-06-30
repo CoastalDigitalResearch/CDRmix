@@ -1,0 +1,3 @@
+model:
+  name: cdrmix-1b
+  hidden_size: 2048
