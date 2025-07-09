@@ -1,0 +1,17 @@
+model:
+  num_layers: 24
+  hidden_size: 2048
+  vocab_size: 32000
+  moe_every: 4
+  num_experts: 8
+  top_k: 2
+
+tokenizer_path: /mnt/tokenizer/cdrmix-bpe-32k
+
+dataset:
+  sources:
+    - name: evalset
+      path: /mnt/eval_data/**/*.jsonl
+  seq_length: 2048
+
+batch_size: 4

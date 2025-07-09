@@ -1,0 +1,22 @@
+model:
+  num_layers: 24
+  hidden_size: 2048
+  vocab_size: 32000
+  moe_every: 4
+  num_experts: 8
+  top_k: 2
+
+tokenizer_path: /mnt/tokenizer/cdrmix-bpe-32k
+
+dataset:
+  sources:
+    - name: trainset
+      path: /mnt/data/tokenized_shards/**/*.jsonl
+  seq_length: 2048
+
+training:
+  lr: 2e-4
+  batch_size: 4
+  epochs: 3
+  checkpoint_dir: checkpoints/
+  save_every_steps: 1000
