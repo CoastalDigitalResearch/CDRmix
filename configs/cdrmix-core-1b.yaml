@@ -1,0 +1,40 @@
+model:
+  name: cdrmix-core-1b
+  vocab_size: 50272
+  d_model: 2048
+  n_layers: 24
+  schedule:
+    variant: top-of-x # or "interleave-x"
+    transformer_pct: 0.25
+    interleave_every: 4 # used only if variant == interleave-x
+  blocks:
+    transformer:
+      attn: mhsa
+      n_heads: 16
+      rope: true
+      ffn_hidden: 8192 # used only for non-MoE fallback
+    rwkv:
+      time_mix: true
+      channel_mix: true
+      channel_mult: 2.0 # inner channels ~ 2 * d_model
+  moe:
+    enabled: true
+    scope: ffn_only # apply MoE to FFN/ChannelMix paths
+    experts: 8
+    top_k: 2
+    expert_ffn_hidden: 4608 # per-expert hidden size (RWKV: ChannelMix)
+    capacity_factor: 1.25
+    aux_losses: [load_balance, z_loss]
+  readout:
+    tie_embeddings: true
+
+training:
+  losses: [ce, moe_aux]
+  dtype: bfloat16
+  grad_clip: 1.0
+  init_std_scale: 1.0
+  rmsnorm_eps: 1e-6
+
+notes:
+  - "Target ~1B active params; total params larger due to 8-expert MoE (top_k=2)."
+  - "Adjust expert_ffn_hidden to fine-tune active vs total parameter budget."

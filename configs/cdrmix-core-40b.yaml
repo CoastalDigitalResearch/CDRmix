@@ -1,0 +1,40 @@
+model:
+  name: cdrmix-core-40b
+  vocab_size: 50272
+  d_model: 6144
+  n_layers: 64
+  schedule:
+    variant: top-of-x
+    transformer_pct: 0.25
+    interleave_every: 4
+  blocks:
+    transformer:
+      attn: mhsa
+      n_heads: 48
+      rope: true
+      ffn_hidden: 24576
+    rwkv:
+      time_mix: true
+      channel_mix: true
+      channel_mult: 2.0
+  moe:
+    enabled: true
+    scope: ffn_only
+    experts: 8
+    top_k: 2
+    expert_ffn_hidden: 16384
+    capacity_factor: 1.25
+    aux_losses: [load_balance, z_loss]
+  readout:
+    tie_embeddings: true
+
+training:
+  losses: [ce, moe_aux]
+  dtype: bfloat16
+  grad_clip: 1.0
+  init_std_scale: 0.9
+  rmsnorm_eps: 1e-6
+
+notes:
+  - "Target ~40B active params; tune expert_ffn_hidden if memory is tight."
+  - "Consider gradient checkpointing & ZeRO for multi-node training."

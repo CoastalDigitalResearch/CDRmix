@@ -1,0 +1,81 @@
+model:
+  name: cdrmix-reason-40b
+  vocab_size: 50272
+  d_model: 6144
+  n_layers: 64
+  schedule:
+    variant: top-of-x
+    transformer_pct: 0.25
+    interleave_every: 4
+
+blocks:
+  transformer:
+    attn: mhsa
+    n_heads: 48
+    rope: true
+    ffn_hidden: 24576
+  rwkv:
+    time_mix: true
+    channel_mix: true
+    channel_mult: 2.0
+
+moe:
+  enabled: true
+  scope: ffn_only
+  experts: 8
+  top_k: 2
+  expert_ffn_hidden: 16384
+  capacity_factor: 1.25
+  aux_losses: [load_balance, z_loss]
+
+reasoning:
+  controller:
+    max_branches: 4
+    accept_threshold: 0.0
+    rollback_on_reject: true
+    step_budget: 128
+  hebbian:
+    adapters: plastic-lora
+    rank: 16
+    alpha: 0.16
+    clamp: 2.0
+    objective: corr_loss_v1
+    decay: 0.99
+    commit_policy: on_accept
+  rl_memagent:
+    algorithm: grpo
+    policy: memory-ops
+    actions: [summarize, retrieve, splice_window, cache_write]
+    rewards:
+      task_metric_weight: 1.0
+      latency_penalty: 0.008
+      stability_bonus: 0.12
+    ppo_like:
+      horizon: 512
+      gamma: 0.997
+      lam: 0.96
+      clip_ratio: 0.2
+      kl_target: 0.02
+  memory:
+    working:
+      kv_summary_stride: 8
+      rolling_summary_dim: 768
+    episodic:
+      index: faiss
+      top_k: 8
+      max_tokens: 131072
+      write_policy: on_accept
+
+readout:
+  tie_embeddings: true
+
+training:
+  losses: [ce, rl, hebbian, moe_aux]
+  dtype: bfloat16
+  grad_clip: 0.9
+  rmsnorm_eps: 1e-6
+  init_std_scale: 0.9
+
+notes:
+  - "Enable activation/sequence checkpointing for long horizons."
+  - "Tune KL target if policy updates destabilize routing."

@@ -1,0 +1,81 @@
+model:
+  name: cdrmix-reason-1b
+  vocab_size: 50272
+  d_model: 2048
+  n_layers: 24
+  schedule:
+    variant: top-of-x # or "interleave-x"
+    transformer_pct: 0.25
+    interleave_every: 4
+
+blocks:
+  transformer:
+    attn: mhsa
+    n_heads: 16
+    rope: true
+    ffn_hidden: 8192
+  rwkv:
+    time_mix: true
+    channel_mix: true
+    channel_mult: 2.0
+
+moe:
+  enabled: true
+  scope: ffn_only
+  experts: 8
+  top_k: 2
+  expert_ffn_hidden: 4608
+  capacity_factor: 1.25
+  aux_losses: [load_balance, z_loss]
+
+reasoning:
+  controller:
+    max_branches: 3 # concurrent proposals per step
+    accept_threshold: 0.0 # accept if RL advantage >= threshold
+    rollback_on_reject: true
+    step_budget: 64 # per prompt
+  hebbian:
+    adapters: plastic-lora # ephemeral low-rank deltas
+    rank: 8
+    alpha: 0.2 # plasticity scale
+    clamp: 2.0
+    objective: corr_loss_v1 # local correlation objective
+    decay: 0.98 # per-step decay within episode
+    commit_policy: on_accept # commit only if RL accepts
+  rl_memagent:
+    algorithm: grpo # GRPO-style policy improvement
+    policy: memory-ops
+    actions: [summarize, retrieve, splice_window, cache_write]
+    rewards:
+      task_metric_weight: 1.0
+      latency_penalty: 0.01
+      stability_bonus: 0.1
+    ppo_like:
+      horizon: 256
+      gamma: 0.995
+      lam: 0.95
+      clip_ratio: 0.2
+      kl_target: 0.02
+  memory:
+    working:
+      kv_summary_stride: 8
+      rolling_summary_dim: 512
+    episodic:
+      index: faiss
+      top_k: 4
+      max_tokens: 16384 # external memory read/write window
+      write_policy: on_accept
+
+readout:
+  tie_embeddings: true
+
+training:
+  losses: [ce, rl, hebbian, moe_aux]
+  dtype: bfloat16
+  grad_clip: 1.0
+  rmsnorm_eps: 1e-6
+  init_std_scale: 1.0
+
+notes:
+  - "Reasoning variant: Hybrid Hebbian-RL with RL-MemAgent over memory ops."
+  - "MoE: 8 experts, top_k=2; adjust expert_ffn_hidden to meet budget."

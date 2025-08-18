@@ -1,0 +1,39 @@
+data/
+  ingestion/
+  tokenizer/
+  curricula/
+configs/
+  cdrmix-core-1b.yaml
+  cdrmix-core-4b.yaml
+  cdrmix-core-40b.yaml
+  cdrmix-core-200b.yaml
+  cdrmix-reason-1b.yaml
+  cdrmix-reason-4b.yaml
+  cdrmix-reason-40b.yaml
+  cdrmix-reason-200b.yaml
+  core_param_autosizer.py
+  reasoning_param_autosizer.py
+training/
+  build_backbone.py
+  train_stageA.py
+  train_stageB.py
+  dist/
+reasoning/
+  adapters/
+  memagent/
+  memory/
+eval/
+  perplexity.py
+  long_context.py
+  routing_metrics.py
+ops/
+  checkpointing.py
+  registry.py
+  ci/
+specs/
+  architecture_backbone.md
+  architecture_reasoning.md
+  prd/
+    training_pipeline_prd.md
+    reasoning_stack_prd.md
+    data_pipeline_prd.md

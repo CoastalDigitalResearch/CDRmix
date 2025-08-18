@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "cdr-extended-thinking": {
+      "command": "python3",
+      "args": ["/Users/apippert/Development/CDR/CDRmcp/src/cdr_enhanced_thinking/main.py"],
+      "env": {
+        "PYTHONPATH": "/Users/apippert/Development/CDR/CDRmcp/src"
+      }
+    }
+  }
+}

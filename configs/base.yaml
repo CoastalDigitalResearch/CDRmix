@@ -1,0 +1,15 @@
+# CDRmix Base Configuration
+model:
+  d_model: 768
+  n_layers: 12
+  tx_ratio: 0.25  # 25% transformer, 75% RWKV
+
+moe:
+  num_experts: 8
+  top_k: 2
+  capacity_factor: 1.25
+
+training:
+  batch_size: 32
+  learning_rate: 1e-4
+  max_steps: 100000
