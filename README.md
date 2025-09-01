@@ -38,7 +38,7 @@ CDRmix exists to:
 
 ## Training Configuration
 
-The current training effort targets the **1B parameter** version (`cdrmix-1b`), using the [Common Pile v0.1 (Filtered)](https://huggingface.co/datasets/common-pile/common-pile-v01-filtered) as the only dataset.  This dataset should be sufficient for the 1b and 4b models, and additional data will be curated and published by Cascadian Digital Research for the 8b model.
+The current training effort targets the **1B parameter** version (`cdrmix-1b`), using the [Common Pile v0.1 (Filtered)](https://huggingface.co/datasets/common-pile/common-pile-v01-filtered) as the only dataset.  This dataset should be sufficient for the 1b and 4b models, and additional data will be curated and published by Coastal Digital Research for the 8b model.
 
 Training pipeline features:
 
@@ -89,7 +89,7 @@ cdrmix/
 
 CDRmix is an **open-source, community-oriented project**. Contributions are welcome via GitLab issues and merge requests. Please open an issue if you're interested in contributing adapters, dataset preps, or training configs.
 
-If this project is useful to you, we also appreciate any social media sharing (@CascadianDigit on X) and would love honest and open feedback to make it better, even if you aren't comfortable with contribution.
+If this project is useful to you, we also appreciate any social media sharing (@CoastalDigitalR on X) and would love honest and open feedback to make it better, even if you aren't comfortable with contribution.
 
 ---
 
@@ -101,7 +101,7 @@ This project is licensed under the [MIT License](./LICENSE).
 
 ## Maintained by
 
-**Cascadian Digital Research**  
+**Coastal Digital Research**  
 Focused on high-performance, open, and resilient AI system design.
 
 <https://gitlab.com/cascadiandigitalresearch>
