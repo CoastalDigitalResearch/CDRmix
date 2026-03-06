@@ -1,3 +1,5 @@
+THIS REPOSITORY IS NO LONGER BEING MAINTAINED.  A NEW MODEL ARCHITECTURE WILL BE RELEASED IN THE NEXT FEW WEEKS.
+
 # CDRmix
 
 **CDRmix** is an open, streaming-capable Mixture-of-Experts (MoE) large language model architecture built on top of RWKV-style blocks. It is optimized for long-context reasoning and modular expert routing, and is being developed for efficient deployment across heterogeneous hardware platforms — including NVIDIA, AMD, and Tenstorrent.
